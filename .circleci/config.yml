@@ -29,9 +29,9 @@ jobs:
           name: Deploy to Railway App
           command: |
             cd bankchurn-api
-            railway up --service=pacific-clarity
+            railway link $RAILWAY_PROJECT_ID
+            railway service $RAILWAY_SERVICE_ID
             railway up --detach
-
 
 tags_only: &tags_only
   filters:
