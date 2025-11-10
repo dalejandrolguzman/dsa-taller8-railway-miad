@@ -18,20 +18,24 @@ prepare_venv: &prepare_venv
 jobs:
   deploy_app_to_railway:
     <<: *defaults
+    environment:
+      RAILWAY_TOKEN: ${RAILWAY_TOKEN}
+      RAILWAY_PROJECT_ID: ${RAILWAY_PROJECT_ID}
+      RAILWAY_SERVICE_ID: ${RAILWAY_SERVICE_ID}
     steps:
       - checkout:
           path: ~/project/
       - node/install:
           node-version: '20.9'
-      - run: node --version 
-      - run: npm i -g @railway/cli     
+      - run: npm i -g @railway/cli
       - run:
-          name: Deploy to Railway App
+          name: Link and Deploy to Railway
           command: |
             cd bankchurn-api
-            railway up --project ${RAILWAY_PROJECT_ID} --service 7f692859-e087-4ee7-b09b-87db274b7d18 --detach
-          environment:
-            RAILWAY_TOKEN: ${RAILWAY_TOKEN}
+            # 1. Link the directory to the project and service
+            railway link ${RAILWAY_PROJECT_ID} ${RAILWAY_SERVICE_ID}
+            # 2. Deploy the now-linked project
+            railway up --detach
 
 tags_only: &tags_only
   filters:
