@@ -20,15 +20,13 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip
       - run:
-          name: Install requirements
+          name: DEBUG - List all files in the project
           command: |
-            . venv/bin/activate
-            echo "Paso 1: Instalando el paquete local (.whl)..."
-            # La ruta correcta es relativa al directorio de trabajo del proyecto
-            pip install ./bankchurn-api/../model-pkg/model_abandono-0.0.1-py3-none-any.whl
-            
-            echo "Paso 2: Instalando el resto de las dependencias desde PyPI..."
-            grep -v 'model-pkg' bankchurn-api/requirements.txt | pip install -r /dev/stdin
+            echo "--- Mostrando todos los archivos y carpetas del proyecto ---"
+            ls -R
+            echo "--- Fin del listado ---"
+            # Forzamos un error para poder ver los logs
+            exit 1
       - run:
           name: Run tests
           command: |
