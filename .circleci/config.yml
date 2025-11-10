@@ -28,9 +28,10 @@ jobs:
       - run:
           name: Deploy to Railway App
           command: |
-            export RAILWAY_TOKEN=${RAILWAY_TOKEN}
             cd bankchurn-api
             railway up --service 7f692859-e087-4ee7-b09b-87db274b7d18 --detach
+          environment:
+            RAILWAY_TOKEN: ${RAILWAY_TOKEN}
       
 tags_only: &tags_only
   filters:
