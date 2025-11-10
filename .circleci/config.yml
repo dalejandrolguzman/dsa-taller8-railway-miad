@@ -1,4 +1,5 @@
 version: '2.1'
+
 orbs:
   node: circleci/node@5.1.0
 
@@ -7,15 +8,29 @@ defaults: &defaults
     - image: cimg/python:3.10
   working_directory: ~/project
 
-prepare_venv: &prepare_venv
-  run:
-    name: Create venv
-    command: |
-      python -m venv venv
-      source venv/bin/activate
-      pip install --upgrade pip
-
 jobs:
+  build_and_test:
+    <<: *defaults
+    steps:
+      - checkout:
+          path: ~/project/
+      - run:
+          name: Create venv
+          command: |
+            python -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip
+      - run:
+          name: Install requirements
+          command: |
+            source venv/bin/activate
+            pip install -r bankchurn-api/requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            source venv/bin/activate
+            pytest bankchurn-api/
+
   deploy_app_to_railway:
     <<: *defaults
     steps:
@@ -25,31 +40,18 @@ jobs:
           node-version: '20.9'
       - run: npm i -g @railway/cli
       - run:
-          name: Link and Deploy to Railway
+          name: Deploy to Railway App
           command: |
-            cd bankchurn-api
-            
-            echo "Paso 1: Exportando el token de autenticacion..."
-            export RAILWAY_TOKEN=${RAILWAY_TOKEN}
-            
-            echo "Paso 2: Vinculando el proyecto y servicio..."
-            railway link --project ${RAILWAY_PROJECT_ID} --service ${RAILWAY_SERVICE_ID}
-            
-            echo "Paso 3: Desplegando la aplicacion..."
-            railway up --detach
-
-tags_only: &tags_only
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^.*/
+            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway up --service ${RAILWAY_SERVICE_ID} --detach
+          working_directory: ~/project/bankchurn-api
 
 workflows:
-  version: 1
   deploy_pipeline:
     jobs:
+      - build_and_test
       - deploy_app_to_railway:
+          requires:
+            - build_and_test
           filters:
             branches:
               only:
