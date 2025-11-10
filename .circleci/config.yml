@@ -23,7 +23,11 @@ jobs:
           name: Install requirements
           command: |
             . venv/bin/activate
-            pip install -r bankchurn-api/requirements.txt
+            echo "Paso 1: Instalando el paquete local (.whl)..."
+            pip install ./model-pkg/model_abandono-0.0.1-py3-none-any.whl
+            
+            echo "Paso 2: Instalando el resto de las dependencias desde PyPI..."
+            grep -v 'model-pkg' bankchurn-api/requirements.txt | pip install -r /dev/stdin
       - run:
           name: Run tests
           command: |
