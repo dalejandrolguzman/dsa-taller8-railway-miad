@@ -32,7 +32,7 @@ jobs:
             railway up --project ${RAILWAY_PROJECT_ID} --service 7f692859-e087-4ee7-b09b-87db274b7d18 --detach
           environment:
             RAILWAY_TOKEN: ${RAILWAY_TOKEN}
-      
+                  
 tags_only: &tags_only
   filters:
     branches:
