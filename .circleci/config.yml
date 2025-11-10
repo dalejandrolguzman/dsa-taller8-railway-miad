@@ -18,10 +18,6 @@ prepare_venv: &prepare_venv
 jobs:
   deploy_app_to_railway:
     <<: *defaults
-    environment:
-      RAILWAY_TOKEN: ${RAILWAY_TOKEN}
-      RAILWAY_PROJECT_ID: ${RAILWAY_PROJECT_ID}
-      RAILWAY_SERVICE_ID: ${RAILWAY_SERVICE_ID}
     steps:
       - checkout:
           path: ~/project/
@@ -32,8 +28,9 @@ jobs:
           name: Link and Deploy to Railway
           command: |
             cd bankchurn-api
-            railway link --project $RAILWAY_PROJECT_ID --service $RAILWAY_SERVICE_ID
-            railway up --detach
+            # Prepend the token to each railway command for explicit auth
+            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway link --project ${RAILWAY_PROJECT_ID} --service ${RAILWAY_SERVICE_ID}
+            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway up --detach
 
 tags_only: &tags_only
   filters:
