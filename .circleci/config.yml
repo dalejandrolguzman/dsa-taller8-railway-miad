@@ -32,9 +32,7 @@ jobs:
           name: Link and Deploy to Railway
           command: |
             cd bankchurn-api
-            # 1. Link the directory to the project and service
-            railway link ${RAILWAY_PROJECT_ID} ${RAILWAY_SERVICE_ID}
-            # 2. Deploy the now-linked project
+            railway link --project $RAILWAY_PROJECT_ID --service $RAILWAY_SERVICE_ID
             railway up --detach
 
 tags_only: &tags_only
