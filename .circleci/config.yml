@@ -25,12 +25,28 @@ jobs:
           node-version: '20.9'
       - run: npm i -g @railway/cli
       - run:
-          name: Link and Deploy to Railway
+          name: DEBUG - Check Environment Variables
           command: |
-            cd bankchurn-api
-            # Prepend the token to each railway command for explicit auth
-            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway link --project ${RAILWAY_PROJECT_ID} --service ${RAILWAY_SERVICE_ID}
-            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway up --detach
+            echo "--- Iniciando Depuracion ---"
+            
+            echo "Verificando RAILWAY_TOKEN..."
+            if [ -z "$RAILWAY_TOKEN" ]; then
+              echo "ERROR: La variable RAILWAY_TOKEN no existe o esta vacia."
+            else
+              echo "OK: La variable RAILWAY_TOKEN esta presente."
+            fi
+
+            echo "Verificando RAILWAY_PROJECT_ID..."
+            if [ -z "$RAILWAY_PROJECT_ID" ]; then
+              echo "ERROR: La variable RAILWAY_PROJECT_ID no existe o esta vacia."
+            else
+              echo "OK: La variable RAILWAY_PROJECT_ID esta presente."
+            fi
+            
+            echo "--- Fin de la Depuracion ---"
+            
+            # Forzamos un error para detener el pipeline aqui y poder ver los logs
+            exit 1
 
 tags_only: &tags_only
   filters:
