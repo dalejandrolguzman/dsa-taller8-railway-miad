@@ -25,11 +25,18 @@ jobs:
           node-version: '20.9'
       - run: npm i -g @railway/cli
       - run:
-          name: DEBUG - Check Railway Auth Status
+          name: Link and Deploy to Railway
           command: |
             cd bankchurn-api
-            echo "--- Intentando autenticar con 'railway status' ---"
-            RAILWAY_TOKEN=${RAILWAY_TOKEN} railway status
+            
+            echo "Paso 1: Exportando el token de autenticacion..."
+            export RAILWAY_TOKEN=${RAILWAY_TOKEN}
+            
+            echo "Paso 2: Vinculando el proyecto y servicio..."
+            railway link --project ${RAILWAY_PROJECT_ID} --service ${RAILWAY_SERVICE_ID}
+            
+            echo "Paso 3: Desplegando la aplicacion..."
+            railway up --detach
 
 tags_only: &tags_only
   filters:
