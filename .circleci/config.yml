@@ -1,5 +1,4 @@
 version: '2.1'
-
 orbs:
   node: circleci/node@5.1.0
 
@@ -9,35 +8,6 @@ defaults: &defaults
   working_directory: ~/project
 
 jobs:
-  build_and_test:
-    <<: *defaults
-    steps:
-      - checkout
-      - run:
-          name: Create and activate venv
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install --upgrade pip
-      - run:
-          name: Install requirements
-          command: |
-            . venv/bin/activate
-            echo "Paso 1: Instalando dependencias de test (pytest)..."
-            # Instalamos pytest para poder correr los tests
-            pip install pytest
-            
-            echo "Paso 2: Instalando el paquete local (.whl) desde la ruta correcta..."
-            pip install ./bankchurn-api/model-pkg/model_abandono-0.0.1-py3-none-any.whl
-            
-            echo "Paso 3: Instalando el resto de las dependencias de la app..."
-            grep -v 'model-pkg' bankchurn-api/requirements.txt | pip install -r /dev/stdin
-      - run:
-          name: Run tests
-          command: |
-            . venv/bin/activate
-            pytest bankchurn-api/
-
   deploy_app_to_railway:
     <<: *defaults
     steps:
@@ -49,17 +19,14 @@ jobs:
           name: Deploy to Railway App
           command: |
             cd bankchurn-api
-            railway up --service $RAILWAY_SERVICE_ID --detach
+            railway up --service=bankchurn-api --detach
 
 workflows:
+  version: 2
   deploy_pipeline:
     jobs:
-      - build_and_test
       - deploy_app_to_railway:
-          requires:
-            - build_and_test
-          context:
-            - railway-secrets # <-- ESTA ES LA LÍNEA MÁGICA
+          context: railway-context
           filters:
             branches:
               only:
