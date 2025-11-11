@@ -20,6 +20,8 @@ jobs:
           command: |
             cd bankchurn-api
             railway up --service=bankchurn-api --detach
+          environment:
+            RAILWAY_TOKEN: $RAILWAY_TOKEN
 
 workflows:
   version: 2
