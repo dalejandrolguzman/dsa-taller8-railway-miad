@@ -24,9 +24,11 @@ jobs:
               echo "ERROR: RAILWAY_TOKEN no configurado"
               exit 1
             fi
-            echo "Token encontrado. Desplegando..."
+            echo "Token encontrado. Configurando Railway..."
+            export RAILWAY_TOKEN=$RAILWAY_TOKEN
             cd bankchurn-api
-            railway up --service=bankchurn-api --detach --token=$RAILWAY_TOKEN
+            railway link bankchurn-api
+            railway up --detach
 
 workflows:
   version: 2
