@@ -20,19 +20,15 @@ jobs:
           name: Deploy to Railway App
           command: |
             echo "Configurando Railway CLI..."
-            # Crear directorio de configuración
             mkdir -p ~/.railway
+            echo "$RAILWAY_TOKEN" > ~/.railway/token
             
-            # Crear archivo de configuración con el token
-            cat > ~/.railway/config.json << EOF
-            {
-              "token": "$RAILWAY_TOKEN"
-            }
-            EOF
-            
-            echo "Desplegando a Railway..."
+            echo "Vinculando proyecto..."
             cd bankchurn-api
-            railway up --service=$RAILWAY_SERVICE_ID --detach
+            railway link $RAILWAY_PROJECT_ID --environment production
+            
+            echo "Desplegando..."
+            railway up --detach
 
 workflows:
   version: 2
