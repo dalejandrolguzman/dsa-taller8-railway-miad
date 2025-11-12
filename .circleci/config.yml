@@ -34,7 +34,7 @@ workflows:
   deploy_pipeline:
     jobs:
       - deploy_app_to_railway:
-          context: railway-context
+          context: railway-secrets
           filters:
             branches:
               only:
