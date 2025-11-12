@@ -19,15 +19,14 @@ jobs:
       - run:
           name: Deploy to Railway App
           command: |
-            echo "Verificando token..."
-            if [ -z "$RAILWAY_TOKEN" ]; then
-              echo "ERROR: RAILWAY_TOKEN no configurado"
+            echo "Verificando variables de Railway..."
+            if [ -z "$RAILWAY_TOKEN" ] || [ -z "$RAILWAY_PROJECT_ID" ] || [ -z "$RAILWAY_SERVICE_ID" ]; then
+              echo "ERROR: Faltan variables de Railway"
               exit 1
             fi
-            echo "Token encontrado. Desplegando..."
+            echo "Variables encontradas. Desplegando..."
             cd bankchurn-api
-            export RAILWAY_TOKEN=$RAILWAY_TOKEN
-            railway up --detach
+            railway up --service=$RAILWAY_SERVICE_ID --detach
 
 workflows:
   version: 2
