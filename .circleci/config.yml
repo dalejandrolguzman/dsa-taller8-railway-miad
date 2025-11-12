@@ -19,13 +19,11 @@ jobs:
       - run:
           name: Deploy to Railway App
           command: |
-            echo "Configurando Railway CLI..."
-            mkdir -p ~/.railway
-            echo "$RAILWAY_TOKEN" > ~/.railway/token
-            
             echo "Desplegando a Railway..."
             cd bankchurn-api
-            RAILWAY_TOKEN=$RAILWAY_TOKEN railway up --detach
+            RAILWAY_TOKEN=$RAILWAY_TOKEN \
+            RAILWAY_SERVICE=$RAILWAY_SERVICE_ID \
+            railway up --detach
 
 workflows:
   version: 2
