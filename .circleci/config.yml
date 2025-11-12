@@ -23,12 +23,9 @@ jobs:
             mkdir -p ~/.railway
             echo "$RAILWAY_TOKEN" > ~/.railway/token
             
-            echo "Vinculando proyecto..."
+            echo "Desplegando a Railway..."
             cd bankchurn-api
-            railway link $RAILWAY_PROJECT_ID --environment production
-            
-            echo "Desplegando..."
-            railway up --detach
+            RAILWAY_TOKEN=$RAILWAY_TOKEN railway up --detach
 
 workflows:
   version: 2
